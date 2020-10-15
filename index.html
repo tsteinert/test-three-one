@@ -23,6 +23,8 @@
       const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
       camera.position.z = 4;
 
+      var controls = new OrbitControls( camera, renderer.domElement );
+
       const scene = new THREE.Scene();
 
       {
@@ -65,6 +67,8 @@
           cube.rotation.x = rot;
           cube.rotation.y = rot;
         });
+
+        controls.update();
 
         renderer.render(scene, camera);
 
