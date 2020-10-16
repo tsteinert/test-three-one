@@ -11,10 +11,12 @@
   <script type="module">
     import * as THREE from './resources/js/three.module.js';
     import { OrbitControls } from './resources/js/OrbitControls.js';
+    //import { TrackballControls } from './resources/js/TrackballControls.js';
 
     function main() {
       const canvas = document.querySelector('#c');
       const renderer = new THREE.WebGLRenderer({canvas});
+      renderer.setSize(600, 300);
 
       const fov = 75;
       const aspect = 2;  // the canvas default
@@ -24,6 +26,12 @@
       camera.position.z = 4;
 
       var controls = new OrbitControls( camera, renderer.domElement );
+      controls.enableRotate = true
+      //controls.minAzimuthAngle = 1;
+      //controls.maxAzimuthAngle = 2;
+      controls.minPolarAngle = Math.PI / 3;
+      controls.maxPolarAngle = 0;
+      //var controls = new TrackballControls( camera, renderer.domElement );
 
       const scene = new THREE.Scene();
 
@@ -40,23 +48,39 @@
       const boxDepth = 1;
       const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-      function makeInstance(geometry, color, x) {
+      function makeInstance(geometry, color, x, y, z) {
         const material = new THREE.MeshPhongMaterial({color});
 
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
 
         cube.position.x = x;
-        cube.position.y = x;
+        cube.position.y = z;
+        cube.position.z = y;
 
         return cube;
       }
 
       const cubes = [
-        makeInstance(geometry, 0x44aa88,  0),
-        makeInstance(geometry, 0x8844aa, -2),
-        makeInstance(geometry, 0xaa8844,  2),
+        makeInstance(geometry, 0x44aa88,  0, 0, 2),
+        makeInstance(geometry, 0x8844aa, -2, 0, 2),
+        makeInstance(geometry, 0xaa8844,  2, 0, 2),
       ];
+
+      // make a plain of boxes
+      const worldColors = [0x555555, 0x606060];
+      const worldWidth = 30;
+      const worldHeight = 30;
+      const worldDepth = 1;
+      var w, h, d;
+      for(w = 0; w < worldWidth; w++) {
+        for(h = 0; h < worldHeight; h++) {
+          for(d = 0; d < worldDepth; d++) {
+            var color = worldColors[(w + h) % worldColors.length];
+            makeInstance(geometry, color, w - (boxWidth * worldWidth / 2), h - (boxHeight * worldHeight / 2), d);
+          }
+        }
+      }
 
       function render(time) {
         time *= 0.001;  // convert time to seconds
