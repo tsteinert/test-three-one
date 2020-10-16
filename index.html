@@ -27,11 +27,7 @@
 
       var controls = new OrbitControls( camera, renderer.domElement );
       controls.enableRotate = true
-      //controls.minAzimuthAngle = 1;
-      //controls.maxAzimuthAngle = 2;
-      controls.minPolarAngle = Math.PI / 3;
-      controls.maxPolarAngle = 0;
-      //var controls = new TrackballControls( camera, renderer.domElement );
+      controls.maxPolarAngle = Math.PI * 4 / 10;
 
       const scene = new THREE.Scene();
 
